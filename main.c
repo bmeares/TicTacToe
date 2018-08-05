@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <time.h>
+#include <unistd.h>
 
 bool startScreen();
 bool state(char tablePtr[][3]);
@@ -12,14 +14,15 @@ int col(char tablePtr[][3]);
 bool checkWin(char tablePtr[][3]);
 bool yesNo();
 bool runAgain();
-//char * init();
+void delay();
+void randomTurn(char tablePtr[][3]);
 
 char player = ' ';
 int playerCount = 0;
+int numPlayers = -1;
 
 int main(){
   bool playing = startScreen();
-//  char table[][3] = init();
   char table[3][3];
   int i = 0;
   int j = 0;
@@ -46,8 +49,17 @@ int main(){
 
 bool startScreen(){
   clear();
-  printf("\n Welcome to Tic Tac Toe! Press any key to continue.\n");
-  getchar();
+  printf("\n Welcome to Tic Tac Toe! How many players for this game?");
+  printf(" (0, 1, or 2)\n");
+
+  while(numPlayers < 0 || numPlayers > 2){
+    scanf("%d", &numPlayers);
+    if(numPlayers < 0 || numPlayers > 2)
+      printf("Please choose between 0 and 2.\n");
+  }
+
+  if(numPlayers < 2)
+    srand(time(0));
 
   return true;
 }
@@ -108,6 +120,7 @@ void draw(char tablePtr[][3]){
   for(k = 0; k < 13; k++){
     printf("\u2014");
   }
+  printf("\n");
 }
 
 void turn(char tablePtr[][3]){
@@ -115,22 +128,45 @@ void turn(char tablePtr[][3]){
   int c = 0;
   bool picking = true;
 
+
+
+  if (numPlayers == 2 || ((player == 'X') && (numPlayers == 1)) ){
+    while(picking){
+      r = row(tablePtr);
+      c = col(tablePtr);
+      if(tablePtr[r][c] != ' '){
+        printf("\n Please pick an open square. Enter any key to try again.\n");
+        picking = true;
+        getchar();
+        getchar();
+        draw(tablePtr);
+      }
+      else
+        picking = false;
+    }
+    tablePtr[r][c] = player;
+  }
+
+  else if(numPlayers < 2)
+    randomTurn(tablePtr);
+}
+
+void randomTurn(char tablePtr[][3]){
+  int r,c = 0;
+  bool picking = true;
+
   while(picking){
-    r = row(tablePtr);
-    c = col(tablePtr);
+    r = rand() % 3;
+    c = rand() % 3;
     if(tablePtr[r][c] != ' '){
-      printf("\n Please pick an open square. Enter any key to try again.\n");
       picking = true;
-      getchar();
-      getchar();
-      draw(tablePtr);
     }
     else
       picking = false;
   }
-
-
   tablePtr[r][c] = player;
+  delay(500000);
+
 }
 
 int row(char tablePtr[][3]){
@@ -316,7 +352,7 @@ bool checkWin(char tablePtr[][3]){
         spaceAvail = true;
     }
   }
-  if(!spaceAvail){
+  if(!spaceAvail && !won){
     won = true;
     draw(tablePtr);
     printf("\n Cat's nest! No one wins.\n");
@@ -340,4 +376,9 @@ bool runAgain(){
   clear();
   printf("\n Run again? (y/n) ");
   return yesNo();
+}
+
+void delay(unsigned int mseconds){
+    clock_t goal = mseconds + clock();
+    while (goal > clock());
 }
