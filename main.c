@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <time.h>
-#include <unistd.h>
 
 bool startScreen();
 bool state(char tablePtr[][3]);
@@ -127,8 +126,6 @@ void turn(char tablePtr[][3]){
   int r = 0;
   int c = 0;
   bool picking = true;
-
-
 
   if (numPlayers == 2 || ((player == 'X') && (numPlayers == 1)) ){
     while(picking){
