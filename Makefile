@@ -5,4 +5,4 @@ run:
 	./tictactoe
 
 clean:
-	rm a.out
+	rm tictactoe

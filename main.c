@@ -48,8 +48,8 @@ int main(){
 
 bool startScreen(){
   clear();
-  printf("\n Welcome to Tic Tac Toe! How many players for this game?");
-  printf(" (0, 1, or 2)\n");
+  printf("\n Welcome to Tic Tac Toe: C edition!\n\n");
+  printf(" How many players for this game?\n (0, 1, or 2): ");
 
   while(numPlayers < 0 || numPlayers > 2){
     scanf("%d", &numPlayers);
@@ -80,7 +80,13 @@ bool state(char tablePtr[][3]){
 }
 
 void clear(){
+  #ifdef __unix
   printf("\033c");
+  #endif
+
+  #ifdef _WIN32
+  system("cls");
+  #endif
 }
 
 void draw(char tablePtr[][3]){
@@ -108,7 +114,7 @@ void draw(char tablePtr[][3]){
 
     printf("\n   ");
     for(k = 0; k < 13; k++){
-      printf("\u2014");
+      printf("-");
     }
     printf("\n %d |",i);
     for(j = 0; j < 3; j++){
@@ -117,7 +123,7 @@ void draw(char tablePtr[][3]){
   }
   printf("\n   ");
   for(k = 0; k < 13; k++){
-    printf("\u2014");
+    printf("-");
   }
   printf("\n");
 }
@@ -134,18 +140,15 @@ void turn(char tablePtr[][3]){
       if(tablePtr[r][c] != ' '){
         printf("\n Please pick an open square. Enter any key to try again.\n");
         picking = true;
-        getchar();
+        while ((getchar()) != '\n');
         getchar();
         draw(tablePtr);
-      }
-      else
-        picking = false;
+      } else
+          picking = false;
     }
     tablePtr[r][c] = player;
-  }
-
-  else if(numPlayers < 2)
-    randomTurn(tablePtr);
+  } else if(numPlayers < 2)
+      randomTurn(tablePtr);
 }
 
 void randomTurn(char tablePtr[][3]){
@@ -157,9 +160,8 @@ void randomTurn(char tablePtr[][3]){
     c = rand() % 3;
     if(tablePtr[r][c] != ' '){
       picking = true;
-    }
-    else
-      picking = false;
+    } else
+        picking = false;
   }
   tablePtr[r][c] = player;
   delay(500000);
@@ -176,12 +178,11 @@ int row(char tablePtr[][3]){
 
     if(r > 2 || r < 0){
       printf("\n Please choose between 0 and 2. Enter any key to try again.\n");
-      getchar();
+      while ((getchar()) != '\n');
       getchar();
       draw(tablePtr);
-    }
-    else
-      picking = false;
+    } else
+        picking = false;
   }
 
   return r;
@@ -198,166 +199,76 @@ int col(char tablePtr[][3]){
 
     if(c > 2 || c < 0){
       printf("\n Please choose between 0 and 2. Enter any key to try again.\n");
-      getchar();
+      while ((getchar()) != '\n');
       getchar();
       draw(tablePtr);
-    }
-    else
-      picking = false;
+    } else
+        picking = false;
   }
 
   return c;
 }
 
 bool checkWin(char tablePtr[][3]){
-  bool won = false;
+  int i,j;
+  char first, second, third;
 
-  if( (tablePtr[0][0] == 'X') && (tablePtr[1][0] == 'X') && (tablePtr[2][0] == 'X') ){
-    won = true;
-    draw(tablePtr);
-    printf("\n X wins!\n");
-    getchar();
-    getchar();
-  }
-
-  if( (tablePtr[0][1] == 'X') && (tablePtr[1][1] == 'X') && (tablePtr[2][1] == 'X') ){
-    won = true;
-    draw(tablePtr);
-    printf("\n X wins!\n");
-    getchar();
-    getchar();
-  }
-
-  if( (tablePtr[0][2] == 'X') && (tablePtr[1][2] == 'X') && (tablePtr[2][2] == 'X') ){
-    won = true;
-    draw(tablePtr);
-    printf("\n X wins!\n");
-    getchar();
-    getchar();
-  }
-
-  if( (tablePtr[0][0] == 'X') && (tablePtr[0][1] == 'X') && (tablePtr[0][2] == 'X') ){
-    won = true;
-    draw(tablePtr);
-    printf("\n X wins!\n");
-    getchar();
-    getchar();
-  }
-
-  if( (tablePtr[1][0] == 'X') && (tablePtr[1][1] == 'X') && (tablePtr[1][2] == 'X') ){
-    won = true;
-    draw(tablePtr);
-    printf("\n X wins!\n");
-    getchar();
-    getchar();
-  }
-
-  if( (tablePtr[2][0] == 'X') && (tablePtr[2][1] == 'X') && (tablePtr[2][2] == 'X') ){
-    won = true;
-    draw(tablePtr);
-    printf("\n X wins!\n");
-    getchar();
-    getchar();
-  }
-
-  if( (tablePtr[0][0] == 'X') && (tablePtr[1][1] == 'X') && (tablePtr[2][2] == 'X') ){
-    won = true;
-    draw(tablePtr);
-    printf("\n X wins!\n");
-    getchar();
-    getchar();
-  }
-
-  if( (tablePtr[2][0] == 'X') && (tablePtr[1][1] == 'X') && (tablePtr[0][2] == 'X') ){
-    won = true;
-    draw(tablePtr);
-    printf("\n X wins!\n");
-    getchar();
-    getchar();
-  }
-
-  if( (tablePtr[0][0] == 'O') && (tablePtr[1][0] == 'O') && (tablePtr[2][0] == 'O') ){
-    won = true;
-    draw(tablePtr);
-    printf("\n O wins!\n");
-    getchar();
-    getchar();
-  }
-
-  if( (tablePtr[0][1] == 'O') && (tablePtr[1][1] == 'O') && (tablePtr[2][1] == 'O') ){
-    won = true;
-    draw(tablePtr);
-    printf("\n O wins!\n");
-    getchar();
-    getchar();
-  }
-
-  if( (tablePtr[0][2] == 'O') && (tablePtr[1][2] == 'O') && (tablePtr[2][2] == 'O') ){
-    won = true;
-    draw(tablePtr);
-    printf("\n O wins!\n");
-    getchar();
-    getchar();
-  }
-
-  if( (tablePtr[0][0] == 'O') && (tablePtr[0][1] == 'O') && (tablePtr[0][2] == 'O') ){
-    won = true;
-    draw(tablePtr);
-    printf("\n O wins!\n");
-    getchar();
-    getchar();
-  }
-
-  if( (tablePtr[1][0] == 'O') && (tablePtr[1][1] == 'O') && (tablePtr[1][2] == 'O') ){
-    won = true;
-    draw(tablePtr);
-    printf("\n O wins!\n");
-    getchar();
-    getchar();
-  }
-
-  if( (tablePtr[2][0] == 'O') && (tablePtr[2][1] == 'O') && (tablePtr[2][2] == 'O') ){
-    won = true;
-    draw(tablePtr);
-    printf("\n O wins!\n");
-    getchar();
-    getchar();
-  }
-
-  if( (tablePtr[0][0] == 'O') && (tablePtr[1][1] == 'O') && (tablePtr[2][2] == 'O') ){
-    won = true;
-    draw(tablePtr);
-    printf("\n O wins!\n");
-    getchar();
-    getchar();
-  }
-
-  if( (tablePtr[2][0] == 'O') && (tablePtr[1][1] == 'O') && (tablePtr[0][2] == 'O') ){
-    won = true;
-    draw(tablePtr);
-    printf("\n O wins!\n");
-    getchar();
-    getchar();
-  }
-
-/* Check for a tie */
-  int i,j = 0;
-  bool spaceAvail = false;
+  /* Check for horizontal victory */
   for(i = 0; i < 3; i++){
-    for(j = 0; j < 3; j++){
-      if(tablePtr[i][j] == ' ')
-        spaceAvail = true;
+    first = tablePtr[i][0];
+    second = tablePtr[i][1];
+    third = tablePtr[i][2];
+
+    if( (first == second) && (second == third) && (first != ' ') ) {
+      draw(tablePtr);
+      printf("\n %c wins!\n", first);
+      while ((getchar()) != '\n');
+      getchar();
+      return true;
     }
   }
-  if(!spaceAvail && !won){
-    won = true;
-    draw(tablePtr);
-    printf("\n Cat's nest! No one wins.\n");
-    getchar();
-    getchar();
+
+  /* Check for vertical victory */
+  for(i = 0; i < 3; i++){
+    first = tablePtr[0][i];
+    second = tablePtr[1][i];
+    third = tablePtr[2][i];
+
+    if( (first == second) && (second == third) && (first != ' ')){
+      draw(tablePtr);
+      printf("\n %c wins!\n", first);
+      while ((getchar()) != '\n');
+      getchar();
+      return true;
+    }
   }
 
-  return won;
+  /* Check for diagonal victory */
+  if( (((tablePtr[0][0] == tablePtr[1][1]) == tablePtr[2][2]) || (tablePtr[2][0]
+  == tablePtr[1][1]) == tablePtr[0][2]) && tablePtr[1][1] != ' ' ){
+    draw(tablePtr);
+    printf("\n %c wins!\n", tablePtr[1][1]);
+    while ((getchar()) != '\n');
+    getchar();
+    return true;
+  }
+
+  /* Check for tie */
+  bool spaceAvail = false;
+  for(i = 0; i < 3; i++)
+    for(j = 0; j < 3; j++)
+      if(tablePtr[i][j] == ' ')
+        spaceAvail = true;
+
+  if(!spaceAvail){
+    spaceAvail = false;
+    draw(tablePtr);
+    printf("\n Cat's nest! No one wins.\n");
+    while ((getchar()) != '\n');
+    getchar();
+    return true;
+  }
+  return false;
 }
 
 bool yesNo(){
@@ -376,6 +287,10 @@ bool runAgain(){
 }
 
 void delay(unsigned int mseconds){
+    #ifdef _WIN32
+    mseconds /= 1000;
+    #endif
+
     clock_t goal = mseconds + clock();
     while (goal > clock());
 }
