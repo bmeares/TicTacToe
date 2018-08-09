@@ -234,6 +234,8 @@ def runAgain():
 def clear():
     if platform.system() == "Linux":
         os.system("clear")
+    if platform.system() == "Darwin":
+        os.system("clear")
     elif platform.system() == "Windows":
         os.system("CLS")
     else:
