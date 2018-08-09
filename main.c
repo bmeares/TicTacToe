@@ -245,8 +245,9 @@ bool checkWin(char tablePtr[][3]){
   }
 
   /* Check for diagonal victory */
-  if( (((tablePtr[0][0] == tablePtr[1][1]) == tablePtr[2][2]) || (tablePtr[2][0]
-  == tablePtr[1][1]) == tablePtr[0][2]) && tablePtr[1][1] != ' ' ){
+  if( (((tablePtr[0][0] == tablePtr[1][1]) &&
+  (tablePtr[1][1] == tablePtr[2][2])) || (tablePtr[2][0] == tablePtr[1][1]) &&
+  (tablePtr[1][1] == tablePtr[0][2])) && tablePtr[1][1] != ' ' ){
     draw(tablePtr);
     printf("\n %c wins!\n", tablePtr[1][1]);
     while ((getchar()) != '\n');
