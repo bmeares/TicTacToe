@@ -81,7 +81,8 @@ bool state(char tablePtr[][3]){
 
 void clear(){
   #ifdef __unix
-  printf("\033c");
+//  printf("\033c");
+  system("clear");
   #endif
 
   #ifdef _WIN32
