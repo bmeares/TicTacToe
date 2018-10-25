@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      p.serif { font-family: "Times New Roman", Times, serif; }
+      p.sansserif { font-family: Arial, Helvetica, sans-serif; }
+      p.mono { font-family: "Lucida Console", Lucida, monospace; }
+    </style>
+  </head>
+
+<body>
+<p class="mono" id="board"></p>
+
+<input type="number" id="r_input" placeholder="Row" maxlength="1" min="0" max="2" />
+<!-- <button type = "button" id="row_button" onclick="" >Row</button> -->
+
+<input type="number" id="c_input" placeholder="Col" maxlength="1" min="0" max="2" />
+<!-- <button type = "button" id="col_button" onclick="" >Col</button> -->
+
+<button type = "button" id="submit" name="submit" onclick="state()">Choose</button>
+<button type = "button" id="reset" onclick="reset()">Run again?</button>
+
+<script>
+  // document.getElementById("r_input").style.display = "none";
+  // document.getElementById("c_input").style.display = "none";
+  // document.getElementById("row_button").style.display = "none";
+  document.getElementById("reset").style.display = "none";
+  var playerCount = 0;
+  var numPlayers = 2;
+  var player = "X";
+  var winner = "";
+  var size = 3;
+  var table = new Array(size);
+  var i, j;
+  for(i = 0; i < size; i++) table[i] = new Array(size);
+  for(i = 0; i < size; i++) for(j = 0; j < size; j++) table[i][j] = "\xa0";
+  draw();
+
+  var c_input = document.getElementById("c_input");
+  var r_input = document.getElementById("r_input");
+  // Execute a function when the user releases a key on the keyboard
+  c_input.addEventListener("keyup", function(event) {
+    // Cancel the default action, if needed
+    event.preventDefault();
+    // Number 13 is the "Enter" key on the keyboard
+    if (event.keyCode === 13) {
+      // Trigger the button element with a click
+      document.getElementById("submit").click();
+    }
+  });
+  r_input.addEventListener("keyup", function(event) {
+    // Cancel the default action, if needed
+    event.preventDefault();
+    // Number 13 is the "Enter" key on the keyboard
+    if (event.keyCode === 13) {
+      // Trigger the button element with a click
+      document.getElementById("submit").click();
+    }
+  });
+
+
+  function set_player(){ if(playerCount % 2 == 0) player = "X"; else player = "O"; }
+
+  function state(){
+    draw();
+    turn();
+    playerCount++;
+    draw();
+    return !checkWin();
+  }
+
+  function turn(){
+    var r = 0, c = 0;
+    // var picking = true;
+    var valid = true;
+    if(numPlayers == 2 || ((player == "X" && (numPlayers == 1)))){
+      // while(picking){
+        r = row(); c = col();
+        if(table[r][c] != "\xa0"){ window.alert("Please pick an open square."); valid = false; }
+        else picking = false;
+      // }
+
+      if(valid) table[r][c] = player; else{ playerCount--; set_player(); console.log("playerCount is " + playerCount);}
+    } else if(numPlayers < 2) randomTurn();
+  }
+
+  function row(){ return document.getElementById("r_input").value; }
+
+  function col(){ return document.getElementById("c_input").value; }
+
+  function checkWin(){
+      if(horiz_win() || vert_win() || diag_win()){
+        draw(); window.alert(winner + "\xa0wins!");
+        document.getElementById("reset").style.display = "block";
+        return true;
+      }
+      var spaceAvail = false;
+      for(i = 0; i < size; i++) for(j = 0; j < size; j++) if(table[i][j] == "\xa0") spaceAvail = true;
+      if(!spaceAvail){
+        draw();
+        window.alert("Cat's nest! No one wins.");
+        return true;
+      }
+      return false;
+  }
+
+  function horiz_win(){
+    var first, second, third;
+    for(i = 0; i < size; i++){
+      first = table[i][0];
+      second = table[i][1];
+      third = table[i][2];
+      if(first != "\xa0" && first == second && second == third){ winner = first; return true; }
+    }
+    return false;
+  }
+
+  function vert_win(){
+    var first, second, third;
+    for(i = 0; i < size; i++){
+      first = table[0][i];
+      second = table[1][i];
+      third = table[2][i];
+      if(first != "\xa0" && first == second && second == third){ winner = first; return true; }
+    }
+    return false;
+  }
+
+  function diag_win(){
+    if( (((table[0][0] == table[1][1]) &&
+      (table[1][1] == table[2][2])) || (table[2][0] == table[1][1]) &&
+      (table[1][1] == table[0][2])) && table[1][1] != "\xa0" ){
+        winner = table[1][1];
+        return true;
+      }
+  }
+
+  function draw(){
+    set_player();
+    var out = "<br />\xa0";
+    var i;
+    for(i = 0; i < 18; i++){ out += "-"; }
+    out += "<br />\xa0|\xa0NOW\xa0PLAYING:\xa0" + player + "\xa0|<br />\xa0";
+    for(i = 0; i < 18; i++){ out += "-"; }
+    out += "<br /><br />\xa0\xa0\xa0\xa0\xa0";
+    for(i = 0; i < 3; i++) out += i + "\xa0\xa0\xa0";
+    for(i = 0; i < 3; i++){
+      out += "<br />\xa0\xa0\xa0";
+      var j;
+      for(j = 0; j < 13; j++) out += "-";
+      out += "<br />\xa0" + i + "\xa0|";
+      for(j = 0; j < size; j++) out += "\xa0" + table[i][j] + "\xa0|";
+    }
+    out += "<br />\xa0\xa0\xa0";
+    for(i = 0; i < 13; i++) out += "-";
+    out += "<br />";
+    document.getElementById('board').innerHTML = out;
+  }
+
+  function reset(){
+    for(i = 0; i < size; i++) for(j = 0; j < size; j++) table[i][j] = "\xa0";
+    document.getElementById("reset").style.display = "none";
+    draw();
+  }
+
+
+</script>
+
+
+
+</body>
+</html>
